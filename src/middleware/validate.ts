@@ -39,10 +39,8 @@ export function validateMerged(schema: ZodSchema) {
   };
 }
 
-declare global {
-  namespace Express {
-    interface Request {
-      chartParams?: Record<string, unknown>;
-    }
+declare module 'express-serve-static-core' {
+  interface Request {
+    chartParams?: Record<string, unknown>;
   }
 }

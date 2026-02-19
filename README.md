@@ -75,50 +75,20 @@ The `/qr` endpoint has the following query parameters:
 
 ## Dependencies and Installation
 
-Chart generation requires several system dependencies: Cairo, Pango, libjpeg, and libgif.  Run `./scripts/setup.sh` for a fresh install on Linux machines (note that this also installs yarn, node, and monit).
+**Requirements:** Node.js >= 22
 
-To install system dependencies on Mac OSX, you probably just need to `brew install cairo pango libffi`.  You may have to `export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"` before installing node packages.
+Chart generation requires system dependencies for the `canvas` npm package: Cairo, Pango, libjpeg, and giflib.
 
-Once you have system dependencies installed, run `yarn install` or `npm install` to install the node dependencies.
+- **macOS:** `brew install cairo pango libffi`
+- **Ubuntu/Debian:** `apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev`
 
-## Running the server
-
-`node index.js` will start the server on port 3400.  Set your `PORT` environmental variable to change this port.
-
-## Docker
-
-A docker image is available on dockerhub at [ianw/quickchart](https://hub.docker.com/r/ianw/quickchart).
-
-#### Building
-
-`Dockerfile` sets up a server that provides chart and qr code web endpoints.  It is not parameterized and provides exactly the same web service as https://quickchart.io/.
-
-The Docker image for this project is built with the following command:
-```
-docker build -t ianw/quickchart .
+```bash
+npm install
+npm run build
+npm start
 ```
 
-#### Running
-
-The server runs on port 3400 within the container.  This command will expose the server on port 8080 on your host (hostport:containerport):
-
-```
-docker run -p 8080:3400 ianw/quickchart
-```
-
-The production service on QuickChart.io runs behind an NGINX reverse proxy via the config available in `nginx/`.  You should modify this for your own purposes or use a docker image such as [nginx-proxy](https://github.com/jwilder/nginx-proxy).  Of course, you can always serve traffic directly from Node, but it is generally best practice to put something in front of it.
-
-#### Securing your self-hosted instance
-
-If you are hosting QuickChart youself, take care not to expose the service to untrusted parties.  Because Chart.js configs may contain arbitrary Javascript, it is necessary to properly sandbox your QuickChart instance.
-
-## Deploy
-
-By following the **Docker** instructions above, you can deploy the service to any platform that supports running containers.
-
-Clicking the following will execute the Docker build on a remote machine and deploy the service to [Google Cloud Run](https://cloud.run) an automatically scaled and pay-per-request environment:
-
-[![Run on Google Cloud](https://storage.googleapis.com/cloudrun/button.svg)](https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/typpo/quickchart)
+The server starts on port 3400. Set the `PORT` environment variable to change this.
 
 ## Securing your self-hosted instance
 
@@ -126,19 +96,8 @@ This server assumes all Javascript sent in the config object is friendly.  If yo
 
 ## Health and Monitoring
 
-QuickChart has two API endpoints to determine the health of the service.
-
-`/healthcheck` is a basic endpoint that returns a 200 status code and a JSON object that looks like this: `{"success":true,"version":"1.1.0"}`.
-
-A second endpoint, `/healthcheck/chart` returns a 302 status code and redirects to a chart with random attributes.  Although it is a more expensive endpoint, it can be useful for cache busting or testing chart rendering.
-
-The hosted QuickChart service uses [monit](https://mmonit.com/monit/) to make sure the service is online and restart it if not.  An example monit config is in `test/monit`.
-
-## Limitations
-
-If you are self-hosting QuickChart, each QuickChart instance should use a single version of the Chart.js library.  Mixing and matching versions (e.g., rendering a v2 chart followed by a v3 chart) is not well supported.
-
-This self-hosted QuickChart implementation currently supports the `/chart`, `/qr`, and `/graphviz` endpoints.  Other endpoints such as `/wordcloud`, `watermark`, `/chart/create` are not available in this version due to non-OSS 3rd-party dependencies.
+- **`GET /healthcheck`** — returns `{"success":true,"version":"2.0.0"}` with a 200 status code
+- **`GET /metrics`** — Prometheus-format metrics (request counts, render counts, error counts, duration histograms)
 
 ## License
 

@@ -290,17 +290,6 @@ npm start
 
 The server starts on port 3400. Visit `http://localhost:3400/healthcheck` to verify.
 
-### Docker
-
-Build and run:
-
-```bash
-docker build -t quickchart .
-docker run -p 3400:3400 quickchart
-```
-
-The Docker image uses a multi-stage build on `node:22-alpine`. It includes all required fonts (Latin, CJK, emoji) and Graphviz.
-
 ### Environment Variables
 
 | Variable | Default | Description |

@@ -53,9 +53,9 @@ export function patternDraw(
   patternColor: string,
   requestedSize: number,
 ) {
-  return function doPatternDraw() {
+  return async function doPatternDraw() {
     const size = Math.min(200, requestedSize) || 20;
-    const pattern = require('patternomaly');
+    const pattern = await import('patternomaly');
     // patternomaly requires a document global
     (globalThis as Record<string, unknown>).document = {
       createElement: () => createCanvas(size, size),
