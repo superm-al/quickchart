@@ -1,0 +1,10 @@
+export const MAX_WIDTH = 3000;
+export const MAX_HEIGHT = 3000;
+export const MAX_CHART_INPUT_LENGTH = 100_000;
+export const DEFAULT_WIDTH = 500;
+export const DEFAULT_HEIGHT = 300;
+export const DEFAULT_DEVICE_PIXEL_RATIO = 2;
+export const DEFAULT_QR_SIZE = 150;
+export const MAX_QR_SIZE = 3000;
+export const VM_TIMEOUT_MS = 1_000;
+export const CACHE_MAX_AGE = 604_800; // 1 week in seconds
